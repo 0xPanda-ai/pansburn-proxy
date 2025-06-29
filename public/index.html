@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Burning PANS</title>
+  <style>
+    body {
+      background: #111;
+      color: #f0f0f0;
+      font-family: 'Noto Sans SC', sans-serif;
+      padding: 20px;
+      position: relative;
+    }
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      height: 60px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(0); }
+      50%  { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #fff;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+    @keyframes spin {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.4rem;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #999;
+      font-size: 1rem;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .action-buttons a {
+      background: #fff;
+      color: #111;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-buttons a:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255,255,255,0.2);
+    }
+    .dashboard {
+      max-width: 800px;
+      margin: 100px auto 0 auto;
+      background: #1a1a1a;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 40px;
+      text-align: center;
+    }
+    .token-info {
+      margin-bottom: 20px;
+      font-size: 1rem;
+      color: #ccc;
+      word-break: break-all;
+    }
+    .burned {
+      font-size: 3rem;
+      margin: 40px 0;
+      font-weight: bold;
+    }
+    .progress-container {
+      background: #333;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 40px;
+      margin-top: 30px;
+      position: relative;
+    }
+    .progress-bar {
+      background: #fff;
+      color: #111;
+      height: 100%;
+      width: 0%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 15px;
+      font-weight: bold;
+      transition: width 1.5s ease;
+      font-size: 1rem;
+    }
+    button {
+      background: #fff;
+      color: #111;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      margin-top: 35px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255,255,255,0.2);
+    }
+    @media (max-width: 800px) {
+      .burned { font-size: 2.2rem; }
+      .dashboard { padding: 20px; margin-top: 120px; }
+      button { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGO -->
+  <img src="assets/panda_white.png" alt="Panda Logo" class="logo">
+
+  <h1>🔥Burning $PANS🔥</h1>
+  <div class="subtitle">
+    🐼 PandaSui
+    <img src="assets/sui.png" alt="Sui" style="height:20px;">
+  </div>
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <a href="https://app.cetus.zone/swap/0x2::sui::SUI/0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS" target="_blank">
+      🛒 Buy on Cetus
+    </a>
+    <a href="https://x.com/0xPandaSui" target="_blank">
+      🐦 Follow on X
+    </a>
+    <a href="https://t.me/PandaSuiCoin" target="_blank">
+      💬 Join on Telegram
+    </a>
+  </div>
+  <div class="dashboard">
+    <div class="token-info">💧Contract Address💧<br>
+      <code>0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS</code>
+    </div>
+    <div class="token-info">🔥Burn Address🔥<br>
+      <code>0x0000000000000000000000000000000000000000000000000000000000000000</code><br>
+      <code>(Anyone can send $PANS to that address for burning.)</code>
+    </div>
+    <div class="burned" id="burned-amount">Loading...</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar">0%</div>
+    </div>
+    <button id="query-button" onclick="queryBlockBerry()">🐼Refresh🐼</button>
+  </div>
+  <script>
+    async function queryBlockBerry() {
+      const burnedAmountEl = document.getElementById('burned-amount');
+      const progressBar = document.getElementById('progress-bar');
+      const button = document.getElementById('query-button');
+
+      const spinner = document.createElement('span');
+      spinner.className = 'spinner';
+      button.appendChild(spinner);
+
+      burnedAmountEl.textContent = 'Loading...';
+      progressBar.style.width = '0%';
+      progressBar.textContent = '0%';
+      const totalSupply = 10_000_000_000;
+
+      try {
+        const res = await fetch("/api/pansburn");
+
+        const textData = await res.text();
+        try {
+            const data = JSON.parse(textData);
+            if (data && data.content && data.content.length > 0) {
+                const holder = data.content[0];
+                const amount = holder.amount || 0;
+                burnedAmountEl.textContent = `${amount.toFixed(2)} $PANS`;
+                const burnPct = (amount / totalSupply * 100).toFixed(2);
+                progressBar.style.width = burnPct + '%';
+                progressBar.textContent = burnPct + '%';
+            } else {
+                burnedAmountEl.textContent = "The burn address does not hold any PANS.";
+            }
+        } catch(e) {
+            console.error("JSON parse error", e, textData);
+            burnedAmountEl.textContent = "API access is restricted, please try again later.";
+        }
+      } catch (e) {
+        console.error(e);
+        burnedAmountEl.textContent = "Query failed";
+      } finally {
+        spinner.remove();
+      }
+    }
+    queryBlockBerry();
+  </script>
+</body>
+</html>
