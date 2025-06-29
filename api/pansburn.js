@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 export default async function handler(req, res) {
   try {
     const response = await fetch(
@@ -11,11 +9,17 @@ export default async function handler(req, res) {
         }
       }
     );
+
+    if (!response.ok) {
+      console.error("Blockberry API error", response.status);
+      return res.status(502).json({ error: "Upstream API error" });
+    }
+
     const data = await response.json();
     res.status(200).json(data);
+
   } catch (err) {
-    console.error(err);
+    console.error("serverless error", err);
     res.status(500).json({ error: "Proxy error" });
   }
 }
-
