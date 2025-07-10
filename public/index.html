@@ -3,227 +3,218 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Burning PANS</title>
+  <title>Panda Sui Whitepaper</title>
   <style>
     body {
       background: #111;
-      color: #f0f0f0;
+      color: #fff;
       font-family: 'Noto Sans SC', sans-serif;
-      padding: 20px;
-      position: relative;
-    }
-    .logo {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      height: 60px;
-      animation: float 3s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%   { transform: translateY(0); }
-      50%  { transform: translateY(-8px); }
-      100% { transform: translateY(0); }
-    }
-    .spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #fff;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 8px;
-    }
-    @keyframes spin {
-      0%   { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    h1 {
-      text-align: center;
-      font-size: 2.4rem;
-      margin-bottom: 10px;
-    }
-    .subtitle {
-      text-align: center;
-      color: #999;
-      font-size: 1rem;
-      margin-bottom: 30px;
+      margin: 0;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
     }
-    .action-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+    .sidebar {
+      width: 200px;
+      background: #e0e0e0;
+      color: #111;
+      height: 100vh;
+      padding-top: 40px;
+      border-right: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
     }
-    .action-buttons a {
-      background: #fff;
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar li { border-bottom: 1px solid rgba(0,0,0,0.1); }
+    .sidebar a {
       color: #111;
       text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .action-buttons a:hover {
-      background: #f0f0f0;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(255,255,255,0.2);
-    }
-    .dashboard {
-      max-width: 800px;
-      margin: 100px auto 0 auto;
-      background: #1a1a1a;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.05);
-      padding: 40px;
-      text-align: center;
-    }
-    .token-info {
-      margin-bottom: 20px;
-      font-size: 1rem;
-      color: #ccc;
-      word-break: break-all;
-    }
-    .burned {
-      font-size: 3rem;
-      margin: 40px 0;
-      font-weight: bold;
-    }
-    .progress-container {
-      background: #333;
-      border-radius: 20px;
-      overflow: hidden;
-      height: 40px;
-      margin-top: 30px;
-      position: relative;
-    }
-    .progress-bar {
-      background: #fff;
-      color: #111;
-      height: 100%;
-      width: 0%;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      padding-right: 15px;
-      font-weight: bold;
-      transition: width 1.5s ease;
-      font-size: 1rem;
-    }
-    button {
-      background: #fff;
-      color: #111;
-      border: none;
-      padding: 14px 32px;
-      border-radius: 12px;
-      margin-top: 35px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
       gap: 8px;
+      padding: 15px 20px;
+      transition: background 0.3s ease;
     }
-    button:hover {
-      background: #f0f0f0;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255,255,255,0.2);
+    .sidebar a:hover { background: rgba(0,0,0,0.1); }
+
+    main {
+      flex: 1;
+      margin-left: 200px;
+      padding: 40px;
+      background: #111;
+      color: #fff;
+    }
+    main img {
+      max-width: 35%;
+      display: block;
+      margin: 20px auto;
+      border-radius: 12px;
+    }
+    main a {
+      color: #4ea9ff;
+    }
+    main pre, main code {
+      color: #0f0;
+      background: #222;
+      padding: 2px 4px;
+      border-radius: 4px;
     }
     @media (max-width: 800px) {
-      .burned { font-size: 2.2rem; }
-      .dashboard { padding: 20px; margin-top: 120px; }
-      button { width: 100%; justify-content: center; }
+      body { flex-direction: column; }
+      .sidebar { position: static; width: 100%; height: auto; border: none; }
+      main { margin-left: 0; padding: 20px; }
     }
   </style>
 </head>
 <body>
-  <!-- LOGO -->
-  <img src="assets/panda_white.png" alt="Panda Logo" class="logo">
-
-  <h1>🔥Burning $PANS🔥</h1>
-  <div class="subtitle">
-    🐼 PandaSui
-    <img src="assets/sui.png" alt="Sui" style="height:20px;">
-  </div>
-  <!-- Action Buttons -->
-  <div class="action-buttons">
-    <a href="https://app.cetus.zone/swap/0x2::sui::SUI/0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS" target="_blank">
-      🛒 Buy on Cetus
-    </a>
-    <a href="https://x.com/0xPandaSui" target="_blank">
-      🐦 Follow on X
-    </a>
-    <a href="https://t.me/PandaSuiCoin" target="_blank">
-      💬 Join on Telegram
-    </a>
-  </div>
-  <div class="dashboard">
-    <div class="token-info">💧Contract Address💧<br>
-      <code>0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS</code>
-    </div>
-    <div class="token-info">🔥Burn Address🔥<br>
-      <code>0x0000000000000000000000000000000000000000000000000000000000000000</code><br>
-      <code>(Anyone can send $PANS to that address for burning.)</code>
-    </div>
-    <div class="burned" id="burned-amount">Loading...</div>
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar">0%</div>
-    </div>
-    <button id="query-button" onclick="queryBlockBerry()">🐼Refresh🐼</button>
-  </div>
+  <div class="sidebar" id="sidebar"></div>
+  <main>
+    <div id="markdown-content"></div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
-    async function queryBlockBerry() {
-      const burnedAmountEl = document.getElementById('burned-amount');
-      const progressBar = document.getElementById('progress-bar');
-      const button = document.getElementById('query-button');
+    // 加载侧边栏
+    fetch("sidebar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("sidebar").innerHTML = html;
+      });
 
-      const spinner = document.createElement('span');
-      spinner.className = 'spinner';
-      button.appendChild(spinner);
+    const markdown = `
+# Panda Sui Whitepaper
 
-      burnedAmountEl.textContent = 'Loading...';
-      progressBar.style.width = '0%';
-      progressBar.textContent = '0%';
-      const totalSupply = 10_000_000_000;
+**Panda Sui (PanS)** is the first meme coin in the Sui blockchain with a self-burning model. Its core logic is to continuously burn PanS tokens, driving the supply into a deflationary state. Over time, the total supply of PanS will become increasingly scarce.
 
-      try {
-        const res = await fetch("/api/pansburn");
+The total supply of PanS is **10 billion**, with all tokens in full circulation to provide liquidity on Cetus. The team holds no reserves.
 
-        const textData = await res.text();
-        try {
-            const data = JSON.parse(textData);
-            if (data && data.content && data.content.length > 0) {
-                const holder = data.content[0];
-                const amount = holder.amount || 0;
-                burnedAmountEl.textContent = `${amount.toFixed(2)} $PANS`;
-                const burnPct = (amount / totalSupply * 100).toFixed(2);
-                progressBar.style.width = burnPct + '%';
-                progressBar.textContent = burnPct + '%';
-            } else {
-                burnedAmountEl.textContent = "The burn address does not hold any PANS.";
-            }
-        } catch(e) {
-            console.error("JSON parse error", e, textData);
-            burnedAmountEl.textContent = "API access is restricted, please try again later.";
-        }
-      } catch (e) {
-        console.error(e);
-        burnedAmountEl.textContent = "Query failed";
-      } finally {
-        spinner.remove();
-      }
+The minting authority for PanS has been permanently destroyed, and the liquidity pool (LP) is locked. This means no one can ever steal funds from the PanS liquidity pool.
+
+* **Mint burn TXID:** 83qPxe3tkxPQFupiAyvocGCUKLVwTX7cdA5JwiEDCh58
+* **LP locked TXID:** BvWomnE2jCCFNSy5FFSgwWcFiHxf7Ry7J77uM9aCtNz
+
+---
+
+## **Burning Model**
+
+Although the LP is already locked, we can still extract trading fees from the LP. All of these fees will be used entirely for PanS burning, with no reserves kept. PanS adopts a dual burn model: one through a black hole address, and the other through LP locking.
+
+#### **Black Hole Burning**
+
+All SUI collected from fees will be used to buy PanS, which is then sent to the black hole address (\`0x0000000000000000000000000000000000000000000000000000000000000000\`) for permanent burn. Once the total burned amount exceeds 20% of the total supply, the system will switch to the LP burn mode.
+
+##### **LP Burning**
+
+This logic is more complex and is where most people find it hard to understand. Every time our collected fees are sufficient to accumulate enough PanS, we will create new meme coins, such as EGS, Lions, Bears, etc. These meme coins will form trading pairs with PanS on the Cetus DEX, and their minting rights will be permanently burned, while the corresponding LP will be locked.
+
+Since the mint permissions of these meme coins are destroyed, they cannot be minted again. For example, if a pool is formed with 100 million LionS and 100 million PanS, and there is no ability to mint more, then in the absence of trading, these 100 million PanS will be permanently locked in the pool and will never circulate back to the market.
+
+By pairing PanS with other meme coins and locking the LP to ensure security, whenever these new coins are traded, we will receive more fee income, which in turn allows us to burn even more PanS. If the price of PanS rises, the other meme coins will rise as well, thereby fully binding their pricing structures to PanS.
+
+![burn](https://ipfs.io/ipfs/bafkreiflyd7yhx5isv63lu3cn7qfng7xnujnbo4ksyuanrvk4xqx7bbd5i?filename=burn.png)
+
+## **Technical Details**
+
+### **Cetus Unlimited Liquidity Creation**
+
+Under normal circumstances, Cetus cannot directly use PanS as a pricing trading pair. However, this can be achieved at the contract level. By using the \`cetusprotocol/sui-clmm-sdk\`, we can combine any coin with \$PanS to form a trading pair.
+
+**Example code:**
+
+\`\`\`
+const pool = await sdk.Pool.getPool(pool_id)
+const position = await sdk.Position.getPositionById(pos_id)
+const cur_sqrt_price = new BN(pool.current_sqrt_price)
+const lower_tick = Number(position.tick_lower_index)
+const upper_tick = Number(position.tick_upper_index)
+
+const lower_sqrt_price = TickMath.tickIndexToSqrtPriceX64(lower_tick)
+const upper_sqrt_price = TickMath.tickIndexToSqrtPriceX64(upper_tick)
+
+const slippage_tolerance = new Percentage(new BN(5), new BN(100))
+const liquidity = 10000
+
+const coin_amounts = ClmmPoolUtil.getCoinAmountFromLiquidity(new BN(liquidity), cur_sqrt_price, lower_sqrt_price, upper_sqrt_price, false)
+
+const { coin_amount_limit_a, coin_amount_limit_b } = adjustForCoinSlippage(coin_amounts, slippage_tolerance, true)
+
+const add_liquidity_payload_params: AddLiquidityParams = {
+  coin_type_a: pool.coin_type_a,
+  coin_type_b: pool.coin_type_b,
+  pool_id: pool.id,
+  tick_lower: lower_tick.toString(),
+  tick_upper: upper_tick.toString(),
+  delta_liquidity: liquidity.toString(),
+  max_amount_a: coin_amount_limit_a.toString(),
+  max_amount_b: coin_amount_limit_b.toString(),
+  pos_id: position.pos_object_id,
+  rewarder_coin_types: [],
+  collect_fee: false,
+}
+
+const payload = await sdk.Position.createAddLiquidityPayload(add_liquidity_payload_params)
+
+printTransaction(payload)
+const send_key_pair = 'THE_KEY_PAIR_GENERATED_BY_YOUR_PRIVATE_KEY'
+const transfer_txn = await sdk.FullClient.executeTx(send_key_pair, payload, true)
+\`\`\`
+
+### **PanS Contract Code**
+
+Although we implemented a burn function within the contract, for security reasons we transferred the \`TreasuryCap\` to a black hole address. By destroying the mint permissions, we also destroyed the burn permissions. Therefore, future burning of PanS can only be performed by sending \$PanS to the black hole address \`0x0000000000000000000000000000000000000000000000000000000000000000\`. This address is a secure burn address, beyond the control of anyone, and is currently the mainstream burning method used on the Sui blockchain.
+
+**Contract code:**
+
+\`\`\`
+module pans::pans {
+    use sui::coin::{Self, Coin, TreasuryCap};
+    use sui::url;
+
+    public struct PANS has drop {}
+
+    fun init(witness: PANS, ctx: &mut TxContext) {
+        let (treasury_cap, metadata) = coin::create_currency(
+            witness,
+            9, 
+            b"PANS", 
+            b"PandaSui Coin",
+            b"PandaSui is the first meme coin within the Sui ecosystem to feature a self-burning mechanism.", 
+            option::some(url::new_unsafe_from_bytes(b"https://ipfs.io/ipfs/bafybeibjxzgcww3454vovap3alohbyrp4am4cgy6tylc7hicdr4c33qsly?filename=Pans.png")),
+            ctx
+        );
+
+        transfer::public_transfer(treasury_cap, tx_context::sender(ctx));
+        transfer::public_transfer(metadata, tx_context::sender(ctx));
     }
-    queryBlockBerry();
+
+    public entry fun mint(
+        treasury_cap: &mut TreasuryCap<PANS>,
+        amount: u64,
+        recipient: address,
+        ctx: &mut TxContext
+    ) {
+        let coin = coin::mint(treasury_cap, amount, ctx);
+        transfer::public_transfer(coin, recipient);
+    }
+
+    public entry fun burn(
+        treasury_cap: &mut TreasuryCap<PANS>,
+        coin: Coin<PANS>,
+        _ctx: &mut TxContext
+    ) {
+        coin::burn(treasury_cap, coin);
+    }
+}
+\`\`\`
+
+## **Conclusion**
+
+Meme coins often carry extremely high risks. We have witnessed countless rug pulls and abandoned meme coins that led to catastrophic price crashes. Therefore, we hope that this self-burning meme coin model can maximize value capture and protect early and mid-stage participants.
+
+Since the project’s launch, the price of PanS has experienced a **6000%** increase, with over **25%** of its supply burned, and more PanS being burned every day — all of this within just one week. Over time, more and more PanS will continue to be burned. We also hope that this burn mechanism can evolve into a project launch platform, helping protect even more participants in the future.
+`;
+
+    document.getElementById('markdown-content').innerHTML = marked.parse(markdown);
   </script>
 </body>
 </html>

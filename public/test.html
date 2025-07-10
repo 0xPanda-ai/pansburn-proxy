@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Burning PANS</title>
+  <style>
+    body {
+      background: #111;
+      color: #f0f0f0;
+      font-family: 'Noto Sans SC', sans-serif;
+      margin: 0;
+      display: flex;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 200px;
+      background: #e0e0e0;
+      color: #111;
+      border-right: 1px solid rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      padding-top: 40px;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar li { border-bottom: 1px solid rgba(0,0,0,0.1); }
+    .sidebar a {
+      color: #111;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 20px;
+      transition: background 0.3s ease;
+    }
+    .sidebar a:hover { background: rgba(0,0,0,0.1); }
+
+    main {
+      flex: 1;
+      margin-left: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 { font-size: 2.4rem; margin-top: 40px; }
+    .subtitle {
+      color: #999;
+      font-size: 1rem;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .action-buttons a {
+      background: #fff;
+      color: #111;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-buttons a:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255,255,255,0.2);
+    }
+    .dashboard {
+      width: 100%;
+      max-width: 1040px;
+      background: #1a1a1a;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 40px;
+      margin-top: 40px;
+      text-align: center;
+    }
+    .token-info {
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      color: #ccc;
+      word-break: break-all;
+    }
+    .burned {
+      font-size: 3rem;
+      margin: 40px 0;
+      font-weight: bold;
+    }
+    .progress-container {
+      background: #333;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 40px;
+      margin-top: 30px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 100%;
+      transition: background 1s ease;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #fff;
+    }
+    button {
+      background: #fff;
+      color: #111;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      margin-top: 35px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255,255,255,0.2);
+    }
+    @media (max-width: 800px) {
+      body { flex-direction: column; }
+      .sidebar { position: static; width: 100%; height: auto; border: none; }
+      main { margin-left: 0; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar" id="sidebar"></div>
+  <main>
+    <h1>🔥Burning $PANS🔥</h1>
+    <div class="subtitle">
+      🐼 PandaSui
+      <img src="assets/sui.png" alt="Sui" style="height:20px;">
+    </div>
+    <div class="action-buttons">
+      <a href="https://app.cetus.zone/swap/0x2::sui::SUI/0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS" target="_blank">🛒 Buy on Cetus</a>
+      <a href="https://x.com/0xPandaSui" target="_blank">🐦 Follow on X</a>
+      <a href="https://discord.gg/H7hzaG4uJK" target="_blank">😃 Discord</a>
+      <a href="https://t.me/PandaSuiCoin" target="_blank">💬 Telegram</a>
+    </div>
+    <div class="dashboard">
+      <div class="token-info">💧Contract Address💧<br>
+        <code>0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS</code>
+      </div>
+      <div class="token-info">🔥Burn Address🔥<br>
+        <code>0x0000000000000000000000000000000000000000000000000000000000000000</code><br>
+        <code>(Send $PANS to that address for burning.)</code>
+      </div>
+          <div class="token-info">🔒Lock Address🔒<br>
+        <code>0x9d3032161091172dbdcb7b407d34ecf8e0964637f22946d9257d860c309ceb28</code><br>
+        <code>(Send $PANS to that address for Lock LP.)</code>
+      </div>
+      <div class="burned" id="burned-amount">Loading...</div>
+      <div class="progress-container">
+        <div class="progress-bar" id="combined-progress">0%</div>
+      </div>
+      <div id="progress-summary" style="margin-top: 15px; font-size: 1rem;">
+        🔥Burn: 0% 🔒Lock: 0% 🖥️Total: 0%
+      </div>
+<!-- add pansdev bar-->
+<div class="progress-container" style="margin-top: 30px;">
+  <div class="progress-bar" id="pansdev-progress">0%</div> 
+</div>
+<div id="pansdev-progress-summary" style="margin-top: 15px; font-size: 1rem;">
+  🐼 Lock LP Wallet: <span id="pansdev-amount">0</span> / <span id="pansdev-max">500,000,000</span>
+</div>
+<div>
+  <code>We will launch a new meme when we gather enough $PanS</code>
+</div>
+<!-- end pansdev bar -->
+
+
+      <button id="query-button">🐼 Refresh 🐼</button>
+    </div>
+  </main>
+<script>
+const totalSupply = 10_000_000_000;
+fetch("sidebar.html").then(r=>r.text()).then(h=>{document.getElementById("sidebar").innerHTML=h;});
+async function queryBlockBerry() {
+  try {
+    const res = await fetch("/api/burn?token=pans");
+    const d = await res.json();
+    if (d && d.content && d.content.length > 0) {
+      const h = d.content[0];
+      window.burnAmount = h.amount || 0;
+      window.burnPct = (window.burnAmount / totalSupply * 100).toFixed(2);
+    } else {
+      window.burnAmount = 0; window.burnPct = 0;
+    }
+  } catch(e) {
+    console.error("burn query error", e);
+    window.burnAmount = 0; window.burnPct = 0;
+  }
+}
+async function updatePoolLocked() {
+  try {
+    const res = await fetch("/api/poollocked");
+    const data = await res.json();
+    if (data && data.supply !== undefined) {
+      window.lockAmount = data.supply;
+      window.lockPct = (window.lockAmount / totalSupply * 100).toFixed(2);
+    } else {
+      window.lockAmount = 0; window.lockPct = 0;
+    }
+  } catch(e) {
+    console.error("lock query error", e);
+    window.lockAmount = 0; window.lockPct = 0;
+  }
+}
+function updateSummary() {
+  const burn = parseFloat(window.burnPct || 0);
+  const lock = parseFloat(window.lockPct || 0);
+  const total = (burn + lock).toFixed(2);
+  const burnAmount = window.burnAmount || 0;
+  const lockAmount = window.lockAmount || 0;
+  const totalAmount = burnAmount + lockAmount;
+  document.getElementById('burned-amount').textContent = `${totalAmount.toLocaleString()} $PANS`;
+  const p = document.getElementById('combined-progress');
+  p.style.background = `linear-gradient(
+    to right,
+    #ff4500 0%,
+    #ff6347 ${burn}%,
+    #87cefa ${burn}%,
+    #87cefa ${total}%,
+    #333 ${total}%,
+    #333 100%
+  )`;
+  p.textContent = `${total}%`;
+  document.getElementById('progress-summary').innerHTML = `🔥Burn: ${burn}% 🔒Lock: ${lock}% 🖥️Total: ${total}%`;
+}
+
+// **query PanSDEV**
+async function queryPansBalance() {
+  try {
+    const response = await fetch("/api/pansdev"); 
+    const data = await response.json();
+    
+    if (response.ok && data.pansAmount !== undefined) {
+      const pansAmount = data.pansAmount;
+      const pansProgress = (pansAmount / 150000000) * 100;  
+      window.pansAmount = pansAmount.toFixed(2);  
+      window.pansPct = pansProgress.toFixed(2);   
+    } else {
+      window.pansAmount = 0;
+      window.pansPct = 0;
+    }
+  } catch (e) {
+    console.error("Query PanS Error", e);
+    window.pansAmount = 0;
+    window.pansPct = 0;
+  }
+}
+
+function updatePansProgress() {
+  const pans = parseFloat(window.pansPct || 0);
+  const pansAmount = parseFloat(window.pansAmount || 0);
+  const pansProgress = document.getElementById('pansdev-progress');
+  const summary = document.getElementById('pansdev-progress-summary');
+
+  if (!pansProgress || !summary) {
+    console.error("PansDev progress elements not found");
+    return;
+  }
+
+  pansProgress.style.width = `${pans}%`;
+  pansProgress.style.background = `linear-gradient(to right, #00bfff ${pans}%, #333 ${pans}%)`;
+  pansProgress.textContent = `${pans}%`;
+  summary.innerHTML = `🐼 Lock Wallet: ${pansAmount.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  })} / 150,000,000`;
+}
+// **query PanSDEV end**
+
+async function refreshAll() {
+  await Promise.all([queryBlockBerry(), updatePoolLocked(), queryPansBalance()]);  
+  updateSummary();
+  updatePansProgress(); 
+}
+
+window.onload = refreshAll;  
+
+document.getElementById('query-button').addEventListener('click', refreshAll);
+</script>
+
+</body>
+</html>

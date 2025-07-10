@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "echo 'static frontend, use http-server to preview' && exit 1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@vercel/speed-insights": "^1.2.0"
+  }
 }
