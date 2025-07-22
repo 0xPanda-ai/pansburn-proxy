@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Random Panda Whitepaper</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: 'Noto Sans SC', sans-serif;
+      margin: 0;
+      display: flex;
+    }
+    .sidebar {
+      width: 200px;
+      background: #e0e0e0;
+      color: #111;
+      height: 100vh;
+      padding-top: 40px;
+      border-right: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+    .sidebar ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar li { border-bottom: 1px solid rgba(0,0,0,0.1); }
+    .sidebar a {
+      color: #111;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 20px;
+      transition: background 0.3s ease;
+    }
+    .sidebar a:hover { background: rgba(0,0,0,0.1); }
+
+    main {
+      flex: 1;
+      margin-left: 200px;
+      padding: 40px;
+      background: #111;
+      color: #fff;
+    }
+    main img {
+      max-width: 100%;
+      display: block;
+      margin: 20px auto;
+      border-radius: 12px;
+    }
+    main a {
+      color: #4ea9ff;
+    }
+    main pre, main code {
+      color: #0f0;
+      background: #222;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    @media (max-width: 800px) {
+      body { flex-direction: column; }
+      .sidebar { position: static; width: 100%; height: auto; border: none; }
+      main { margin-left: 0; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar" id="sidebar"></div>
+  <main>
+    <div id="markdown-content"></div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // 加载侧边栏
+    fetch("sidebar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("sidebar").innerHTML = html;
+      });
+
+    const markdown = `
+# Random Panda Club Whitepaper
+
+Random Panda Club (RPC) is the first NFT collection of Panda Sui, with each RPC anchoring 1 million $PanS.
+
+The total supply of RPC is 1000, with 530 successfully minted during the Mint phase, and the remaining 470 NFTs will be destroyed.
+
+RPC uses Tradeport's contract for launch, and fully utilizes the kiosk module, making it fully compatible with Tradeport and other Sui NFT markets.
+
+Based on the anchoring of PanS as value support, we hope this mechanism can provide the NFT with a final liquidity insurance vault, thereby preventing problems caused by the exhaustion of the NFT liquidity market. Furthermore, RPC will be eligible for future NFT airdrops, Alpha Key and other benefits.
+
+RPC Contract:
+\`0x6eabd37ba3e9915b8e0490c4454532909a1282f6dfa6898eb6f3bee7ae58b453::random_panda_club::Nft\`
+
+---
+
+## Future contract technical details
+
+### OTW Structure
+
+In future NFT contracts, we plan to use the OTW Structure, which allows the destruction of contract control rights after minting. On one hand, this provides greater security assurances, while on the other hand, it creates more possibilities for NFT soft upgrades.
+
+\`\`\`
+public struct Panda has drop {}
+
+
+    public struct OwnerCap has key {
+        id: UID,
+    }
+
+    /// Drop Attribute for update
+    public struct Attribute has store, drop {
+        trait_type: String,
+        value: String,
+    }
+
+    public struct Panda has key, store {
+        id: UID,
+        name: String,
+        description: String,
+        url: Url,
+        attributes: vector<Attribute>,
+        alpha: String,
+    }
+
+    public struct NFTMinted has copy, drop {
+        object_id: ID,
+        creator: address,
+        name: String,
+        attributes: vector<String>, 
+        alpha: String,
+    }
+
+    public struct NFTUpdated has copy, drop {
+        object_id: ID,
+        field: String,
+        old_value: String,
+        new_value: String,
+        updater: address,
+    }
+\`\`\`
+
+### Soft Upgrade
+
+Soft Upgrade In the contract, we have pre-written the update parameter, which allows for remote upgrades to the NFT's attributes, images, and other parts in the future. Users do not need to perform any operations, and this function can only be called by the OwnerCap owner, which also avoids the corresponding security issues.
+
+\`\`\`
+public entry fun update_attributes(
+        _: &OwnerCap,
+        nft: &mut PandaNFT,
+        mut new_attributes_data: vector<vector<vector<u8>>>,
+        ctx: &mut TxContext,
+    ) {
+        let sender = tx_context::sender(ctx);
+        let old_attrs_json = attributes_as_json(nft);
+        // drop old attributes
+        nft.attributes = vector::empty<Attribute>();
+        let mut i = 0;
+        let len = vector::length(&new_attributes_data);
+        while (i < len) {
+            let mut pair = vector::remove(&mut new_attributes_data, 0);
+            assert!(vector::length(&pair) == 2, E_INVALID_PAIR);
+            let trait_type = string::utf8(vector::remove(&mut pair, 0));
+            let value = string::utf8(vector::remove(&mut pair, 0));
+            vector::push_back(&mut nft.attributes, Attribute { trait_type, value });
+            vector::destroy_empty(pair);
+            i = i + 1;
+        };
+        vector::destroy_empty(new_attributes_data);
+        let new_attrs_json = attributes_as_json(nft);
+        event::emit(NFTUpdated {
+            object_id: object::id(nft),
+            field: string::utf8(b"attributes"),
+            old_value: old_attrs_json,
+            new_value: new_attrs_json,
+            updater: sender,
+        });
+    }
+\`\`\`
+
+### Batch Operations
+
+In the contract, we have implemented batch transfer and mint functions. This feature is pre-reserved for future NFT Swap contract, which can maximize the savings in gas fees.
+
+\`\`\`
+public fun batch_transfer(
+        mut nfts: vector<PandaNFT>,
+        recipient: address,
+        _: &mut TxContext,
+    ) {
+        let mut i = 0;
+        let len = vector::length(&nfts);
+        while (i < len) {
+            let nft = vector::remove(&mut nfts, 0);
+            transfer::public_transfer(nft, recipient);
+            i = i + 1;
+        };
+        vector::destroy_empty(nfts);
+    }
+\`\`\`
+
+## Random Panda Club  Vault
+
+### Royalty Fee Buyback
+
+All transaction fees generated in the NFT market will be used to buy back $PanS and added to the RPC Vault. As NFT trading volume increases, the amount of PanS in the Vault address will also grow. Each time a user performs an exchange, 10% of the PanS will be sent to a black hole address for destruction. The calculation formula for users exchanging NFT for $PanS is as follows:
+
+\`1 PRC = (Amount of PanS in the Vault address / Circulating quantity of PRC) * 90%\`
+
+
+### RPC Destruction Strategy
+
+Exchanging NFT for PanS is a one-way channel. When a user exchanges RPC for $PanS, the RPC in the insurance vault will be sent to a black hole address for burning, thereby causing a contraction in the NFT supply.
+
+### Airdrop
+
+In the future, we will conduct multiple airdrops or free mints for all RPC holders.
+
+
+### Swap Development Process
+
+Initially, we will use the Sui API to complete this Swap function off-chain. As the number of users increases, this function will be migrated to on-chain contracts.
+
+### More Features
+
+We have embedded an Alpha field in the NFT, the purpose of which is to expand for future alpha tools and other functions. Each NFT's Alpha value is unique.
+
+Although we have developed the NFT Swap function, in most cases, the premium of NFTs is higher than the Swap pricing.
+
+The significance of the Swap function is that when the NFT market experiences liquidity depletion, Cetus's DEX Pool can inject more liquidity into the NFT market, achieving a value protection for NFT holders.
+
+
+`;
+
+    document.getElementById('markdown-content').innerHTML = marked.parse(markdown);
+  </script>
+</body>
+</html>

@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Burning BEARS</title>
+    <link rel="stylesheet" href="https://archive.cetus.zone/assets/terminal/style.css">
+    <script src='https://archive.cetus.zone/assets/terminal/main.js'></script>
   <style>
     body {
-      background: #111;
+      background: #111 !important;
       color: #f0f0f0;
       font-family: 'Noto Sans SC', sans-serif;
       margin: 0;
@@ -80,6 +82,16 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(255,255,255,0.2);
     }
+    .content-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 2080px; 
+  gap: 20px;
+  margin-top: 40px;
+  align-items: stretch; 
+  justify-content: center; 
+      }
     .dashboard {
       width: 100%;
       max-width: 1040px;
@@ -88,7 +100,6 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.6);
       border: 1px solid rgba(255,255,255,0.05);
       padding: 40px;
-      margin-top: 40px;
       text-align: center;
     }
     .token-info { margin-bottom: 20px; font-size: 1.2rem; color: #ccc; word-break: break-all; }
@@ -146,11 +157,13 @@
       <img src="assets/sui.png" alt="Sui" style="height:20px;">
     </div>
     <div class="action-buttons">
-      <a href="https://app.cetus.zone/swap/0x2::sui::SUI/0xb0254143cfb31c310b7950276cbf7f929833504ef6537f42d733eddc49a9489d::bears::BEARS" target="_blank">🛒 Buy on Cetus</a>
+      <a href="https://app.cetus.zone/swap/0x2::sui::SUI/0xb0254143cfb31c310b7950276cbf7f929833504ef6537f42d733eddc49a9489d::bears::BEARS" target="_blank">🛒 Cetus</a>
       <a href="https://x.com/0xPandaSui" target="_blank">🐦 Follow on X</a>
       <a href="https://discord.gg/H7hzaG4uJK" target="_blank">😃 Discord</a>
       <a href="https://t.me/PandaSuiCoin" target="_blank">💬 Telegram</a>
     </div>
+
+     <div class="content-wrapper">
     <div class="dashboard">
       <div class="token-info">💧Contract Address💧<br>
         <code>0xb0254143cfb31c310b7950276cbf7f929833504ef6537f42d733eddc49a9489d::bears::BEARS</code>
@@ -160,7 +173,7 @@
         <code>(Send $BearS to that address for burning.)</code>
       </div>
           <div class="token-info">💵DEX Pay💵<br>
-        <code>0x9a018979377d77a155f8af4519f909b168e4b4a7a99ddfa35596629ee64b172b</code><br>
+        <code>Paid</code><br>
         <code>(Donate $USDC for DEX payment, only supported on the Sui chain.)</code>
       </div>
       <div class="burned" id="burned-amount">Loading...</div>
@@ -168,14 +181,17 @@
       <div id="progress-summary" style="margin-top:15px;font-size:1rem;">🔥Burn: 0%</div>
            <!-- add USDC bar-->
       <div class="progress-container" style="margin-top: 30px;">
-        <div class="progress-bar" id="usdc-progress">0%</div>
+        <div class="progress-bar" id="usdc-progress">100%</div>
       </div>
       <div id="usdc-progress-summary" style="margin-top: 15px; font-size: 1rem;">
-        💵 USDC: 0 / 300
+        💵 USDC: 300 / 300
       </div>
       <!-- end USDC bar -->
       <button id="query-button">🐻 Refresh 🐻</button>
     </div>
+            <div id="cetus-terminal"></div>
+    </div>
+
   </main>
 <script>
 const totalSupply = 10_000_000_000;
@@ -204,44 +220,6 @@ function updateSummary(){
   document.getElementById('progress-summary').innerHTML=`🔥Burn: ${b}%`;
 }
 
-// **query USDC**
-async function queryUsdcBalance() {
-  try {
-    const response = await fetch("/api/bearsdex");
-    const data = await response.json();
-    
-    if (response.ok && data.usdcAmount !== undefined) {
-      const usdcAmount = data.usdcAmount;
-      const usdcProgress = (usdcAmount / 300) * 100;  // 假设最大为300 USDC
-      window.usdcAmount = usdcAmount;
-      window.usdcAmount = usdcAmount.toFixed(2);
-      window.usdcPct = usdcProgress.toFixed(2);
-    } else {
-      window.usdcAmount = 0;
-      window.usdcPct = 0;
-    }
-  } catch (e) {
-    console.error("Query USDC Error", e);
-    window.usdcAmount = 0;
-    window.usdcPct = 0;
-  }
-}
-
-function updateUsdcProgress() {
-  const usdc = parseFloat(window.usdcPct || 0);
-  const usdcAmount = window.usdcAmount || 0;
-  const usdcProgress = document.getElementById('usdc-progress');
-  usdcProgress.style.background = `linear-gradient(
-    to right,
-    #00bfff 0%,
-    #1e90ff ${usdc}%,
-    #333 ${usdc}%,
-    #333 100%
-  )`;
-  usdcProgress.textContent = `${usdc}%`;
-  document.getElementById('usdc-progress-summary').innerHTML = `💵 USDC: ${usdcAmount.toLocaleString()} / 300`;
-}
-// **query USDC end**
 async function refreshAll(){
   await queryBearsBurn();
   updateSummary();
@@ -249,6 +227,28 @@ async function refreshAll(){
   updateUsdcProgress();
   }
 window.onload=refreshAll;document.getElementById('query-button').addEventListener('click',refreshAll);
+
+window.addEventListener('DOMContentLoaded', (event) => {
+            window.CetusSwap.init({
+                containerId: "cetus-terminal",
+                displayMode: "Integrated",
+                defaultFromToken: "0x2::sui::SUI",
+                defaultToToken: "0xb0254143cfb31c310b7950276cbf7f929833504ef6537f42d733eddc49a9489d::bears::BEARS",
+                themeType: "Dark",
+                theme: {
+                    "bg_primary": "#1B242C",
+                    "primary": "#088de6ff",
+                    "text_primary": "#ffffff",
+                    "text_secondary": "#909ca4",
+                    "success": "#68FFD8",
+                    "warning": "#FFCA68",
+                    "error": "#ff5073",
+                    "btn_text": "#222222"
+                },
+
+                independentWallet: true
+            });
+        });
 </script>
 </body>
 </html>

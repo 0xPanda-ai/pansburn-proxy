@@ -1,12 +1,12 @@
 export default async function handler(req, res) {
   try {
-    // 发送请求到Blockberry API，查询USDC余额
+    // 发送请求到Blockberry API，查询PanS余额
     const response = await fetch(
       "https://api.blockberry.one/sui/v1/accounts/0x1f67507cb3a9a24052e54461c5b0549d2de1a7d10a252e65a299f0e4d03d47bb/balance",
       {
         headers: {
           "accept": "*/*",
-          "x-api-key": process.env.API_KEY // 使用Vercel环境变量API_KEY
+          "x-api-key": process.env.NFT_KEY // 使用Vercel环境变量API_KEY
         }
       }
     );
@@ -18,16 +18,16 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     
-    // 在返回的数据中查找USDC的余额
-    const usdcBalance = data.find(
-      (coin) => coin.coinType === "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC"
+    // 在返回的数据中查找PanS的余额
+    const pansBalance = data.find(
+      (coin) => coin.coinType === "0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS"
     );
     
-    if (usdcBalance) {
-      const usdcAmount = usdcBalance.balance;  
-      res.status(200).json({ usdcAmount });
+    if (pansBalance) {
+      const supply = Number(pansBalance.balance);
+      res.status(200).json({ supply: supply });
     } else {
-      res.status(200).json({ error: "USDC balance not found" });
+      res.status(200).json({ error: "PanS balance not found" });
     }
     
   } catch (err) {

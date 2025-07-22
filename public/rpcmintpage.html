@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Minting PanS</title>
+    <link rel="stylesheet" href="https://archive.cetus.zone/assets/terminal/style.css">
+    <script src='https://archive.cetus.zone/assets/terminal/main.js'></script>
+  <style>
+    body {
+      background: #111 !important;
+            color: #f0f0f0;
+            font-family: 'Noto Sans SC', sans-serif;
+            margin: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 200px;
+            background: #e0e0e0;
+            color: #111;
+            height: 100vh;
+            padding-top: 40px;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar li { border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .sidebar a {
+            color: #111;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 15px 20px;
+            transition: background 0.3s ease;
+        }
+        .sidebar a:hover { background: rgba(0,0,0,0.1); }
+
+        main {
+            flex: 1;
+            margin-left: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+        }
+
+        h1 { font-size: 2.4rem; margin-top: 40px; }
+        .subtitle {
+            color: #999;
+            font-size: 1rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .action-buttons a {
+            background: #fff;
+            color: #111;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .action-buttons a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,255,255,0.2);
+        }
+        .content-wrapper {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        max-width: 2080px; 
+        gap: 20px;
+        margin-top: 40px;
+        align-items: stretch; 
+        justify-content: center; 
+        }
+    .dashboard {
+      width: 100%;
+      max-width: 1040px;
+      background: #1a1a1a;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 40px;
+      text-align: center;
+    }
+        .token-info {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: #ccc;
+            word-break: break-all;
+        }
+        .status {
+            font-size: 3rem;
+            margin: 40px 0;
+            font-weight: bold;
+        }
+        .progress-container {
+            background: #333;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 40px;
+            margin-top: 30px;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 100%;
+            transition: background 1s ease;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #fff;
+        }
+        #progress-summary {
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+        .mint-rules {
+            background: #1a1a1a; 
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            text-align: left;
+            max-width: 800px;
+        }
+        .mint-rules h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #f0f0f0;
+        }
+        .mint-rules ol {
+            list-style-type: decimal; 
+            padding-left: 20px; 
+            color: #ccc;
+            font-size: 1rem;
+            line-height: 1.6; 
+        }
+        .mint-rules li {
+            margin-bottom: 10px;
+        }
+        .mint-rules li:last-child {
+            margin-bottom: 0; 
+        }
+        @media (max-width: 800px) {
+            body { flex-direction: column; }
+            .sidebar { position: static; width: 100%; height: auto; border: none; }
+            main { margin-left: 0; padding: 20px; }
+        }
+        .slideshow-container {
+            position: relative;
+            margin: auto;
+            overflow: hidden;
+            width: 100%; 
+            max-width: none; 
+        }
+
+        .slides-wrapper {
+            display: flex;
+            animation: scroll-left 30s linear infinite; 
+        }
+
+        .mySlides {
+            flex: 0 0 calc(100% / 6); 
+            padding: 5px; 
+        }
+
+        .mySlides img {
+            width: 100%; 
+            height: auto;
+            display: block;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        #countdown {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ff4500;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar"></div>
+    <main>
+        <h1>🎉Mint PandaKey NFT🎉</h1>
+        <div class="subtitle">
+            🐼 PanS Sui
+            <img src="assets/sui.png" alt="Sui" style="height:20px;">
+        </div>
+        <div class="action-buttons">
+            <a href="https://app.cetus.zone/swap/0x2::sui::SUI/0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS" target="_blank">🛒 Get $PanS</a>
+            <a href="https://x.com/0xPandaSui" target="_blank">🐦 Follow on X</a>
+            <a href="https://discord.gg/H7hzaG4uJK" target="_blank">😃 Discord</a>
+            <a href="https://t.me/PandaSuiCoin" target="_blank">💬 Telegram</a>
+        </div>
+        <div class="slideshow-container">
+            <div class="slides-wrapper">
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/Gv1VoOcWYAAfIfK.jpeg" alt="Panda image 1">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/9961.png" alt="Panda image 2">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/8465.png" alt="Panda image 3">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/7886.png" alt="Panda image 4">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/7334.png" alt="Panda image 5">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/732.png" alt="Panda image 6">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/6388.png" alt="Panda image 7">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/6334.png" alt="Panda image 8">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/5788.png" alt="Panda image 9">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/5486.png" alt="Panda image 10">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/4921.png" alt="Panda image 11">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/3730.png" alt="Panda image 12">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/3682.png" alt="Panda image 13">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/3025.png" alt="Panda image 14">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/1693.png" alt="Panda image 15">
+                </div>
+                <!-- Duplicate for infinite scroll -->
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/Gv1VoOcWYAAfIfK.jpeg" alt="Panda image 1">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/9961.png" alt="Panda image 2">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/8465.png" alt="Panda image 3">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/7886.png" alt="Panda image 4">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/7334.png" alt="Panda image 5">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/732.png" alt="Panda image 6">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/6388.png" alt="Panda image 7">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/6334.png" alt="Panda image 8">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/5788.png" alt="Panda image 9">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/5486.png" alt="Panda image 10">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/4921.png" alt="Panda image 11">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/3730.png" alt="Panda image 12">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/3682.png" alt="Panda image 13">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/3025.png" alt="Panda image 14">
+                </div>
+                <div class="mySlides">
+                    <img src="https://sapphire-electrical-butterfly-80.mypinata.cloud/ipfs/bafybeielztq7lb72xiggwfjm7xwntdkzgwr6dwlkk5aooidph6h7v4lh4a/1693.png" alt="Panda image 15">
+                </div>
+            </div>
+        </div>
+
+<div class="content-wrapper">
+        <div class="dashboard">
+            <div class="token-info">🎉Mint Address🎉<br>
+                <code id="mint-address">Loading...</code><br>
+            </div>
+            <div class="mint-rules">
+                <h2>Mint Rules:</h2>
+                <ol>
+                    <li>Each PandaKey NFT's mint cost is 1 million $PanS</li>
+                    <li>Simply send the corresponding $PanS directly to the Mint Address</li>
+                    <li>Each wallet is limited to mint 10 PandaKey NFTs</li>
+                    <li>The mint period is a total of 5 days, the total NFT supply is 1000.</li>
+                    <li>After the mint period ends, the NFTs will be batch-sent to your wallet, and you won't need to perform any operations.</li>
+                    <li>Excess $PanS will be refunded via the original route, please mint with confidence</li>
+                </ol>
+            </div>
+            <div id="countdown"></div>
+            <div class="status" id="mint-status">Loading...</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="mint-progress">0%</div>
+            </div>
+            <div id="progress-summary">🔥Mint Progress: 0 / 1000000 PanS (0%)</div>
+        </div>
+        <div id="cetus-terminal"></div>
+</div>
+
+    </main>
+<script>
+fetch("sidebar.html")
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById("sidebar").innerHTML = html;
+  });
+
+async function queryMintStatus() {
+  try {
+    const response = await fetch("/api/rpcvault");
+    const data = await response.json();
+    
+    if (response.ok) {
+      const addressElement = document.getElementById('mint-address');
+      const statusElement = document.getElementById('mint-status');
+      const progressBar = document.getElementById('mint-progress');
+      const progressSummary = document.getElementById('progress-summary');
+      
+      const maxPans = 1000000000;
+      const pansAmount = Number(data.pansAmount) || 0;
+      const progressPct = ((pansAmount / maxPans) * 100).toFixed(2);
+
+      progressBar.style.background = `linear-gradient(
+        to right,
+        #ff4500 0%,
+        #ff6347 ${progressPct}%,
+        #333 ${progressPct}%,
+        #333 100%
+      )`;
+      progressBar.textContent = `${progressPct}%`;
+      progressSummary.textContent = `🔥Mint Progress: ${pansAmount.toLocaleString()} / ${maxPans.toLocaleString()} PanS (${progressPct}%)`;
+      
+      if (data.address) {
+        addressElement.textContent = data.address;
+        statusElement.textContent = "Mint Available";
+      } else if (data.message) {
+        addressElement.textContent = "N/A";
+        statusElement.textContent = data.message;
+      } else {
+        addressElement.textContent = "Error";
+        statusElement.textContent = "Unexpected response";
+      }
+    } else {
+      document.getElementById('mint-address').textContent = "Error";
+      document.getElementById('mint-status').textContent = "API Error";
+    }
+  } catch (e) {
+    console.error("Query Error", e);
+    document.getElementById('mint-address').textContent = "Error";
+    document.getElementById('mint-status').textContent = "Query Failed";
+  }
+}
+
+function refresh() {
+  queryMintStatus();
+}
+
+window.onload = refresh;
+
+// Poll every 60 seconds
+setInterval(refresh, 60000);
+
+const endDate = new Date('2025-07-18T06:00:00Z');
+
+function updateCountdown() {
+  const now = new Date();
+  const timeRemaining = endDate - now;
+
+  if (timeRemaining <= 0) {
+    document.getElementById('countdown').innerHTML = 'Mint Period Has Ended';
+    document.getElementById('mint-status').textContent = 'Mint Ended';
+    return;
+  }
+
+  const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+  document.getElementById('countdown').innerHTML = `${days} Day : ${hours} Hour : ${minutes} Min : ${seconds} Sec`;
+}
+
+updateCountdown(); // Initial call
+setInterval(updateCountdown, 1000); // Update every second
+
+
+window.addEventListener('DOMContentLoaded', (event) => {
+            window.CetusSwap.init({
+                containerId: "cetus-terminal",
+                displayMode: "Integrated",
+                defaultFromToken: "0x2::sui::SUI",
+                defaultToToken: "0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS",
+                themeType: "Dark",
+                theme: {
+                    "bg_primary": "#1B242C",
+                    "primary": "#088de6ff",
+                    "text_primary": "#ffffff",
+                    "text_secondary": "#909ca4",
+                    "success": "#68FFD8",
+                    "warning": "#FFCA68",
+                    "error": "#ff5073",
+                    "btn_text": "#222222"
+                },
+
+                independentWallet: true
+            });
+        });
+</script>
+</body>
+</html>

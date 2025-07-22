@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Burning BVS</title>
+    <link rel="stylesheet" href="https://archive.cetus.zone/assets/terminal/style.css">
+    <script src='https://archive.cetus.zone/assets/terminal/main.js'></script>
   <style>
     body {
-      background: #111;
+      background: #111 !important;
       color: #f0f0f0;
       font-family: 'Noto Sans SC', sans-serif;
       margin: 0;
@@ -80,6 +82,16 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(255,255,255,0.2);
     }
+    .content-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 2080px; 
+  gap: 20px;
+  margin-top: 40px;
+  align-items: stretch; 
+  justify-content: center; 
+      }
     .dashboard {
       width: 100%;
       max-width: 1040px;
@@ -88,7 +100,6 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.6);
       border: 1px solid rgba(255,255,255,0.05);
       padding: 40px;
-      margin-top: 40px;
       text-align: center;
     }
     .token-info {
@@ -156,11 +167,13 @@
       <img src="assets/sui.png" alt="Sui" style="height:20px;">
     </div>
     <div class="action-buttons">
-      <a href="https://app.cetus.zone/swap/0x2::sui::SUI/0x17a1b338d630b30ed19c7a893f973db25bb0f7c9d4c8bdf2fc3ccb414fbaa9a6::bvs::BVS" target="_blank">🛒 Buy on Cetus</a>
+      <a href="https://app.cetus.zone/swap/0x2::sui::SUI/0x17a1b338d630b30ed19c7a893f973db25bb0f7c9d4c8bdf2fc3ccb414fbaa9a6::bvs::BVS" target="_blank">🛒 Cetus</a>
       <a href="https://x.com/0xPandaSui" target="_blank">🐦 Follow on X</a>
       <a href="https://discord.gg/H7hzaG4uJK" target="_blank">😃 Discord</a>
       <a href="https://t.me/PandaSuiCoin" target="_blank">💬 Telegram</a>
     </div>
+
+    <div class="content-wrapper">
     <div class="dashboard">
       <div class="token-info">💧Contract Address💧<br>
         <code>0x17a1b338d630b30ed19c7a893f973db25bb0f7c9d4c8bdf2fc3ccb414fbaa9a6::bvs::BVS</code>
@@ -190,6 +203,10 @@
       <!-- end USDC bar -->
       <button id="query-button">🦫 Refresh 🦫</button>
     </div>
+                    <div id="cetus-terminal"></div>
+    </div>
+
+
   </main>
 <script>
 const totalSupply = 100_000_000;
@@ -277,6 +294,28 @@ async function refreshAll() {
 }
 window.onload = refreshAll;
 document.getElementById('query-button').addEventListener('click', refreshAll);
+
+window.addEventListener('DOMContentLoaded', (event) => {
+            window.CetusSwap.init({
+                containerId: "cetus-terminal",
+                displayMode: "Integrated",
+                defaultFromToken: "0x2::sui::SUI",
+                defaultToToken: "0x17a1b338d630b30ed19c7a893f973db25bb0f7c9d4c8bdf2fc3ccb414fbaa9a6::bvs::BVS",
+                themeType: "Dark",
+                theme: {
+                    "bg_primary": "#1B242C",
+                    "primary": "#088de6ff",
+                    "text_primary": "#ffffff",
+                    "text_secondary": "#909ca4",
+                    "success": "#68FFD8",
+                    "warning": "#FFCA68",
+                    "error": "#ff5073",
+                    "btn_text": "#222222"
+                },
+
+                independentWallet: true
+            });
+        });
 </script>
 </body>
 </html>
