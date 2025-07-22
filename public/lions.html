@@ -154,18 +154,17 @@
         <code>(Send $LionS to that address for burning.)</code>
       </div>
           <div class="token-info">💵DEX Pay💵<br>
-        <code>0x062af452e661e94d17180b8588f5bf63439632eedfe3bfb0a697bdffedddafac</code><br>
-        <code>(Donate $USDC for DEX payment, only supported on the Sui chain.)</code>
+        <code>Paid</code>
       </div>
       <div class="burned" id="burned-amount">Loading...</div>
       <div class="progress-container"><div class="progress-bar" id="burn-progress">0%</div></div>
       <div id="progress-summary" style="margin-top:15px;font-size:1rem;">🔥Burn: 0%</div>
        <!-- add USDC bar-->
       <div class="progress-container" style="margin-top: 30px;">
-        <div class="progress-bar" id="usdc-progress">0%</div>
+        <div class="progress-bar" id="usdc-progress">100%</div>
       </div>
       <div id="usdc-progress-summary" style="margin-top: 15px; font-size: 1rem;">
-        💵 USDC: 0 / 300
+        💵 USDC: 300 / 300
       </div>
       <!-- end USDC bar -->
       <button id="query-button">🦁 Refresh 🦁</button>
@@ -201,44 +200,6 @@ function updateSummary(){
   p.textContent=`${b}%`;
   document.getElementById('progress-summary').innerHTML=`🔥Burn: ${b}%`;
 }
-// **query USDC**
-async function queryUsdcBalance() {
-  try {
-    const response = await fetch("/api/lionsdex");
-    const data = await response.json();
-    
-    if (response.ok && data.usdcAmount !== undefined) {
-      const usdcAmount = data.usdcAmount;
-      const usdcProgress = (usdcAmount / 300) * 100;  // 假设最大为300 USDC
-      window.usdcAmount = usdcAmount;
-      window.usdcAmount = usdcAmount.toFixed(2);
-      window.usdcPct = usdcProgress.toFixed(2);
-    } else {
-      window.usdcAmount = 0;
-      window.usdcPct = 0;
-    }
-  } catch (e) {
-    console.error("Query USDC Error", e);
-    window.usdcAmount = 0;
-    window.usdcPct = 0;
-  }
-}
-
-function updateUsdcProgress() {
-  const usdc = parseFloat(window.usdcPct || 0);
-  const usdcAmount = window.usdcAmount || 0;
-  const usdcProgress = document.getElementById('usdc-progress');
-  usdcProgress.style.background = `linear-gradient(
-    to right,
-    #00bfff 0%,
-    #1e90ff ${usdc}%,
-    #333 ${usdc}%,
-    #333 100%
-  )`;
-  usdcProgress.textContent = `${usdc}%`;
-  document.getElementById('usdc-progress-summary').innerHTML = `💵 USDC: ${usdcAmount.toLocaleString()} / 300`;
-}
-// **query USDC end**
 async function refreshAll(){
   await queryLionsBurn();
   updateSummary();
