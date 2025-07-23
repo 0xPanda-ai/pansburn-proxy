@@ -172,6 +172,9 @@
       <a href="https://x.com/0xPandaSui" target="_blank">🐦 Follow on X</a>
       <a href="https://discord.gg/H7hzaG4uJK" target="_blank">😃 Discord</a>
       <a href="https://t.me/PandaSuiCoin" target="_blank">💬 Telegram</a>
+      <a href="https://www.coingecko.com/en/coins/pandasui-coin" target="_blank">🐸 CoinGecko</a>
+      <a href="https://suiscan.xyz/mainnet/directory/PandaSui" target="_blank">💧 SuiScan</a>
+      <a href="https://noodles.fi/coins/0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS" target="_blank">🍜 Noodles</a>
     </div>
 
 <div class="content-wrapper">
@@ -183,9 +186,12 @@
         <code>0x0000000000000000000000000000000000000000000000000000000000000000</code><br>
         <code>(Send $PANS to that address for burning.)</code>
       </div>
-          <div class="token-info">🔒Lock Address🔒<br>
+        <div class="token-info">🔒Lock Wallet🔒<br>
         <code>0x9d3032161091172dbdcb7b407d34ecf8e0964637f22946d9257d860c309ceb28</code><br>
         <code>(Send $PANS to that address for Lock LP.)</code>
+      </div>
+        <div class="token-info">🏦NFT Vault🏦<br>
+        <code>0x1f67507cb3a9a24052e54461c5b0549d2de1a7d10a252e65a299f0e4d03d47bb</code>
       </div>
       <div class="burned" id="burned-amount">Loading...</div>
       <div class="progress-container">
@@ -209,8 +215,17 @@
     </div>
 <div id="cetus-terminal"></div>
 </div>
-
+<div class="content-wrapper">
+  <iframe
+  src="https://noodles.fi/tv-widget?coin=0xc9523f683256502be15ec4979098d510f67b6d3f0df02eebf124515014433270::pans::PANS&theme=dark"
+  width="100%"
+  height="500"
+  frameborder="0"
+  allowfullscreen>
+</iframe>
+</div>
   </main>
+
 <script>
 const totalSupply = 10_000_000_000;
 fetch("sidebar.html").then(r=>r.text()).then(h=>{document.getElementById("sidebar").innerHTML=h;});
